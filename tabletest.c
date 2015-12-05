@@ -443,13 +443,13 @@ void testRemoveElementsSameKeys(){
  */
 void correctnessTest() {
   testIsempty();
-  testInsertSingleElement();
-  testLookupSingleElement();
-  testInsertLookupDifferentKeys();
-  testInsertLookupSameKeys();
-  testRemoveSingleElement();
-  testRemoveElementsDifferentKeys();
-  testRemoveElementsSameKeys();
+  //testInsertSingleElement();
+  //testLookupSingleElement();
+  //testInsertLookupDifferentKeys();
+  //testInsertLookupSameKeys();
+  //testRemoveSingleElement();
+  //testRemoveElementsDifferentKeys();
+  //testRemoveElementsSameKeys();
 }
 
 /* Tests the speed of a table using random numbers. First a number of
@@ -481,9 +481,9 @@ void speedTest() {
 
 int main() {
   correctnessTest();
-  printf("All correctness tests succeeded! Press enter to continue!\n");
-  getchar();
-  speedTest();
-  printf("Test completed.\n");
+  //printf("All correctness tests succeeded! Press enter to continue!\n");
+  //getchar();
+  //speedTest();
+  //printf("Test completed.\n");
   return 0;
 }

@@ -4,8 +4,6 @@
  * anvÃ¤ndning krÃ¤ver fÃ¶rfattarens tillstÃ¥nd.
  */
 
-#ifndef TableTest_TableTest_h
-#define TableTest_TableTest_h
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE 12000
 #include <stdbool.h>
@@ -61,7 +59,10 @@ Table *table_create(CompareFunction *compare_function){
  *  table - Pointer to the table.
  *  freeFunc- Pointer to a function that is called for  freeing all
  *                     the memory used by keys inserted into the table*/
-void table_setKeyMemHandler(Table *table,KeyFreeFunc *freeFunc);
+void table_setKeyMemHandler(Table *table,KeyFreeFunc *freeFunc){
+    table->
+}
+
 
 /* Install a memory handling function responsible for removing a value when removed from the table
  *  table - Pointer to the table.
