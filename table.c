@@ -6,7 +6,10 @@
 
 #ifndef TableTest_TableTest_h
 #define TableTest_TableTest_h
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE 12000
 #include <stdbool.h>
+#include "array.h"
 
 /* Type for keys in the table */
 typedef void *KEY;
@@ -44,7 +47,15 @@ typedef struct TableElement{
  *                     the parameters are equal, and >0 if the left
  *                     parameter is larger than the right item.
  * Returns: A pointer to the table. NULL if creation of the table failed. */
-Table *table_create(CompareFunction *compare_function);
+Table *table_create(CompareFunction *compare_function){
+    MyTable *t = calloc(sizeof (MyTable),1);
+    if (!t)
+        return NULL;
+    t->values=array_create(1, 0, ARRAY_SIZE);
+    array_setMemHandler(t->values, free);
+    t->cf = compare_function;
+    return t;
+}
 
 /* Install a memory handling function responsible for removing a key when removed from the table
  *  table - Pointer to the table.
