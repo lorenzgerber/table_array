@@ -71,6 +71,16 @@ int compareInt(void *ip,void *ip2){
   return (*(int*)ip) - (*(int*)ip2);
 }
 
+
+/*Compare function used to compare two string values (pointed to by ip and ip2) are equal
+ * ip, ip2 - pointers to two integers
+ * Returns
+ *    0 if values are equal, nonzero otherwize
+ */
+int compareString(void *ip,void *ip2) {
+  return strcmp((char *) ip, (char *) ip2);
+}
+
 /* Shuffles the numbers stored in seq
  *    seq - an array of randomnumbers to be shuffled
  *    n - the number of elements in seq to shuffle, i.e the indexes [0, n] 

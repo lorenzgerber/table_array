@@ -7,35 +7,8 @@
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE 12000
 #include <stdbool.h>
+#include "table.h"
 #include "array.h"
-
-/* Type for keys in the table */
-typedef void *KEY;
-/* Type for values in the table */
-typedef void *VALUE;
-
-/* Type for function comparing two keys (see create for details)*/
-typedef int CompareFunction(KEY,KEY);
-
-/*Types for memory deallocation functions */
-typedef void KeyFreeFunc(KEY);
-typedef void ValueFreeFunc(VALUE);
-
-typedef void /* void hÃ¤r kan ni om ni vill byta ut mot en egen struct i era tabellimplementationer */ Table;
-
-typedef struct MyTable {
-  array *values;
-  CompareFunction *cf;
-  KeyFreeFunc *keyFree;
-  ValueFreeFunc *valueFree;
-} MyTable;
-
-typedef struct TableElement{
-  KEY key;
-  VALUE value;
-} TableElement;
-
-
 
 
 /* Creates a table.
@@ -59,8 +32,9 @@ Table *table_create(CompareFunction *compare_function){
  *  table - Pointer to the table.
  *  freeFunc- Pointer to a function that is called for  freeing all
  *                     the memory used by keys inserted into the table*/
-void table_setKeyMemHandler(Table *table,KeyFreeFunc *freeFunc){
-    table->
+void table_setKeyMemHandler(Table *table, KeyFreeFunc *freeFunc){
+    MyTable *t = (MyTable*)table;
+    t->keyFree=freeFunc;
 }
 
 
@@ -68,12 +42,25 @@ void table_setKeyMemHandler(Table *table,KeyFreeFunc *freeFunc){
  *  table - Pointer to the table.
  *  freeFunc- Pointer to a function that is called for  freeing all
  *                     the memory used by values inserted into the table*/
-void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc);
+void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc){
+    MyTable *t = (MyTable*)table;
+    t->valueFree=freeFunc;
+}
 
 /* Determines if the table is empty.
  *  table - Pointer to the table.
  * Returns: false if the table is not empty, true if it is. */
-bool table_isEmpty(Table *table);
+bool table_isEmpty(Table *table){
+    //loop through the whole array and check if all Null pointers
+    MyTable *t = (MyTable*)table;
+    for (int i = array_low(t->values); i > array_high(t->values); i++){
+        if(!array_hasValue(t->values), i){
+            return 1;
+        }
+    }
+
+    return 0;
+}
 
 /* Inserts a key and value pair into the table. If memhandlers are set the table takes
  * ownership of the key and value pointers and is responsible for 
@@ -82,7 +69,9 @@ bool table_isEmpty(Table *table);
  *  key   - Pointer to the key.
  *  value - Pointer to the value.
  */
-void table_insert(Table *table, KEY key, VALUE value);
+void table_insert(Table *table, KEY key, VALUE value){
+    MyTable *t = (MyTable*)table;
+}
 
 /* Finds a value given its key.
  *  table - Pointer to the table.
@@ -92,7 +81,10 @@ void table_insert(Table *table, KEY key, VALUE value);
  *          user should not attempt to deallocate it. It will remain valid
  *          until the item is removed from the table, or the table is
  *          destroyed. */
-VALUE table_lookup(Table *table, KEY key);
+VALUE table_lookup(Table *table, KEY key){
+    MyTable *t = (MyTable*)table;
+
+}
 
 /* Removes an item from the table given its key.
  *  table - Pointer to the table.
@@ -103,6 +95,19 @@ void table_remove(Table *table, KEY key);
 /* Destroys a table, deallocating all the memory it uses.
  *  table - Pointer to the table. After the function completes this pointer
  *          will be invalid for further use. */
-void table_free(Table *table);
+void table_free(Table *table){
+    MyTable *t = (MyTable*)table;
+    TableElement *i;
+    dlist_position p=dlist_first(t->values);
 
-#endif
+        while (!dlist_isEnd(t->values,p)) {
+            i=dlist_inspect(t->values,p);
+            if(t->keyFree!=NULL)
+                t->keyFree(i->key);
+            if(t->valueFree!=NULL)
+                t->valueFree(i->value);
+            p=dlist_remove(t->values,p);
+        }
+        array_free(t->values);
+        free(t);
+}
