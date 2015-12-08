@@ -6,6 +6,7 @@
 
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE 12000
+#endif
 #include <stdbool.h>
 #include "table.h"
 #include "array.h"
@@ -53,8 +54,10 @@ void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc){
 bool table_isEmpty(Table *table){
     //loop through the whole array and check if all Null pointers
     MyTable *t = (MyTable*)table;
-    for (int i = array_low(t->values); i > array_high(t->values); i++){
-        if(!array_hasValue(t->values), i){
+    int i = 0;
+
+    for ( int i = *((int*)array_inspectValue(array_low(t->values),0)); i > *((int*)array_inspectValue(array_high(t->values),0)); i++){
+        if(!array_hasValue(t->values, i)){
             return 1;
         }
     }
