@@ -10,6 +10,13 @@
 #include <stdbool.h>
 #include "table.h"
 #include "array.h"
+#include <string.h>
+
+
+
+
+
+
 
 
 /* Creates a table.
@@ -54,16 +61,20 @@ void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc){
 bool table_isEmpty(Table *table){
     //loop through the whole array and check if all Null pointers
     MyTable *t = (MyTable*)table;
-    int i = 0;
 
-    for ( int i = *((int*)array_inspectValue(array_low(t->values),0)); i > *((int*)array_inspectValue(array_high(t->values),0)); i++){
-        if(!array_hasValue(t->values, i)){
-            return 1;
+    int low = *((int*)array_inspectValue(array_low(t->values),0));
+    int high = *((int*)array_inspectValue(array_high(t->values),0));
+
+    for ( int pos = low; pos < high; pos++){
+        if(array_hasValue(t->values, pos)){
+            return 0;
         }
     }
 
-    return 0;
+    return 1;
 }
+
+
 
 /* Inserts a key and value pair into the table. If memhandlers are set the table takes
  * ownership of the key and value pointers and is responsible for 
@@ -74,7 +85,45 @@ bool table_isEmpty(Table *table){
  */
 void table_insert(Table *table, KEY key, VALUE value){
     MyTable *t = (MyTable*)table;
+
+    // make a new table element
+    TableElement *e=malloc(sizeof(TableElement));
+    e->key = key;
+    e->value = value;
+
+    // table element to work on
+    TableElement *i;
+
+    // get loop boundaries for array
+    int low = *((int*)array_inspectValue(array_low(t->values),0));
+    int high = *((int*)array_inspectValue(array_high(t->values),0));
+
+    // loop through the table/array until either the same key found
+    // or an emtpy space found
+    for ( int pos = low; pos < high; pos++){
+
+        // get TableElement of current array pos
+        i = array_inspectValue(t->values,pos);
+
+        // if current array pos is empty, put in new element and break
+        if(i == NULL){
+            array_setValue(t->values,e,pos);
+            break;
+        }
+
+        // if the key of the current table element is the same as the new
+        // put the new element in place of the old and break
+        if (t->cf(i->key,key)==0){
+            array_setValue(t->values,e,pos);
+            break;
+        }
+
+
+    }
 }
+
+
+
 
 /* Finds a value given its key.
  *  table - Pointer to the table.
@@ -87,13 +136,80 @@ void table_insert(Table *table, KEY key, VALUE value){
 VALUE table_lookup(Table *table, KEY key){
     MyTable *t = (MyTable*)table;
 
+    // get loop boundaries for array
+    int low = *((int*)array_inspectValue(array_low(t->values),0));
+    int high = *((int*)array_inspectValue(array_high(t->values),0));
+
+    // table element to work on
+    TableElement *i;
+
+    // loop through the table/array until the same key found
+    // or end of array reached
+    for ( int pos = low; pos < high; pos++) {
+
+        // get TableElement of current array pos
+        i = array_inspectValue(t->values, pos);
+
+        // if current array pos is empty, put in new element and break
+        if (i == NULL) {
+            continue;
+        }
+
+        // if the key of the current table element is the same as the
+        // lookup key, return the value
+        if (t->cf(i->key, key) == 0) {
+            return i->value;
+        }
+
+    }
+
+    return NULL;
 }
+
+
+
 
 /* Removes an item from the table given its key.
  *  table - Pointer to the table.
  *  key   - Pointer to the item's key.
  */
-void table_remove(Table *table, KEY key);
+void table_remove(Table *table, KEY key){
+    MyTable *t = (MyTable*)table;
+
+    // table element to work on
+    TableElement *i;
+
+    // get loop boundaries for array
+    int low = *((int*)array_inspectValue(array_low(t->values),0));
+    int high = *((int*)array_inspectValue(array_high(t->values),0));
+
+    // loop through the table/array until all keys found
+    // or all positions visited
+    for ( int pos = low; pos < high; pos++){
+
+        // get TableElement of current array pos
+        i = array_inspectValue(t->values,pos);
+
+        // if current array pos is empty, skip to next
+        if(i == NULL){
+            continue;
+        }
+
+        // if the key of the current table element is the same as the one
+        // one to remove, set to NULL and go on
+        if (t->cf(i->key,key)==0){
+
+            array_setValue(t->values, NULL, pos);
+        }
+
+    }
+
+}
+
+
+
+
+
 
 /* Destroys a table, deallocating all the memory it uses.
  *  table - Pointer to the table. After the function completes this pointer
@@ -101,16 +217,23 @@ void table_remove(Table *table, KEY key);
 void table_free(Table *table){
     MyTable *t = (MyTable*)table;
     TableElement *i;
-    dlist_position p=dlist_first(t->values);
 
-        while (!dlist_isEnd(t->values,p)) {
-            i=dlist_inspect(t->values,p);
-            if(t->keyFree!=NULL)
+    int low = *((int*)array_inspectValue(array_low(t->values),0));
+    int high = *((int*)array_inspectValue(array_high(t->values),0));
+
+    for (int pos = low; pos < high; pos++){
+        i = array_inspectValue(t->values, pos);
+
+        if(array_hasValue(t->values, pos)){
+            if(t->keyFree!=NULL) {
                 t->keyFree(i->key);
-            if(t->valueFree!=NULL)
+            }
+            if(t->valueFree!=NULL) {
                 t->valueFree(i->value);
-            p=dlist_remove(t->values,p);
+            }
         }
-        array_free(t->values);
-        free(t);
+    }
+
+    array_free(t->values);
+    free(t);
 }
