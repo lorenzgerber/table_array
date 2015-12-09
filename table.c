@@ -62,8 +62,14 @@ bool table_isEmpty(Table *table){
     //loop through the whole array and check if all Null pointers
     MyTable *t = (MyTable*)table;
 
-    int low = *((int*)array_inspectValue(array_low(t->values),0));
-    int high = *((int*)array_inspectValue(array_high(t->values),0));
+    // get loop boundaries for array
+    array *aHigh = array_high(t->values);
+    array *aLow  = array_low(t->values);
+
+    int high = *((int*)array_inspectValue(aHigh,0));
+    int low = *((int*)array_inspectValue(aLow,0));
+    array_free(aHigh);
+    array_free(aLow);
 
     for ( int pos = low; pos < high; pos++){
         if(array_hasValue(t->values, pos)){
@@ -95,8 +101,13 @@ void table_insert(Table *table, KEY key, VALUE value){
     TableElement *i;
 
     // get loop boundaries for array
-    int low = *((int*)array_inspectValue(array_low(t->values),0));
-    int high = *((int*)array_inspectValue(array_high(t->values),0));
+    array *aHigh = array_high(t->values);
+    array *aLow  = array_low(t->values);
+
+    int high = *((int*)array_inspectValue(aHigh,0));
+    int low = *((int*)array_inspectValue(aLow,0));
+    array_free(aHigh);
+    array_free(aLow);
 
     // loop through the table/array until either the same key found
     // or an emtpy space found
@@ -137,8 +148,13 @@ VALUE table_lookup(Table *table, KEY key){
     MyTable *t = (MyTable*)table;
 
     // get loop boundaries for array
-    int low = *((int*)array_inspectValue(array_low(t->values),0));
-    int high = *((int*)array_inspectValue(array_high(t->values),0));
+    array *aHigh = array_high(t->values);
+    array *aLow  = array_low(t->values);
+
+    int high = *((int*)array_inspectValue(aHigh,0));
+    int low = *((int*)array_inspectValue(aLow,0));
+    array_free(aHigh);
+    array_free(aLow);
 
     // table element to work on
     TableElement *i;
@@ -180,8 +196,14 @@ void table_remove(Table *table, KEY key){
     TableElement *i;
 
     // get loop boundaries for array
-    int low = *((int*)array_inspectValue(array_low(t->values),0));
-    int high = *((int*)array_inspectValue(array_high(t->values),0));
+    array *aHigh = array_high(t->values);
+    array *aLow  = array_low(t->values);
+
+    int high = *((int*)array_inspectValue(aHigh,0));
+    int low = *((int*)array_inspectValue(aLow,0));
+    array_free(aHigh);
+    array_free(aLow);
+
 
     // loop through the table/array until all keys found
     // or all positions visited
@@ -204,6 +226,7 @@ void table_remove(Table *table, KEY key){
 
     }
 
+
 }
 
 
@@ -218,8 +241,14 @@ void table_free(Table *table){
     MyTable *t = (MyTable*)table;
     TableElement *i;
 
-    int low = *((int*)array_inspectValue(array_low(t->values),0));
-    int high = *((int*)array_inspectValue(array_high(t->values),0));
+    // get loop boundaries for array
+    array *aHigh = array_high(t->values);
+    array *aLow  = array_low(t->values);
+
+    int high = *((int*)array_inspectValue(aHigh,0));
+    int low = *((int*)array_inspectValue(aLow,0));
+    array_free(aHigh);
+    array_free(aLow);
 
     for (int pos = low; pos < high; pos++){
         i = array_inspectValue(t->values, pos);

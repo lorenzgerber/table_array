@@ -173,6 +173,8 @@ array * array_low(array * arr) {
   return lowIndex;
 }
 
+
+
 /*
 Syfte: Avallokerar allt minne som används av arrayen.
 Parametrar: arr - Arrayen vars minne ska avallokeras.

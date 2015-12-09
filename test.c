@@ -47,14 +47,14 @@ int main(void){
     //table_insert(table, intPtrFromInt(101), intPtrFromInt(105));
     //table_remove(table, intPtrFromInt(100));
 
-    //if(table_isEmpty(table)){
-    //    printf("The table is empty\n");
-    //} else {
-    //    printf("The table is not empty\n");
-    //}
+    if(table_isEmpty(table)){
+        printf("The table is empty\n");
+    } else {
+        printf("The table is not empty\n");
+    }
 
     //printf("key 101 has value %d\n", *((int*)table_lookup(table, intPtrFromInt(101))));
-    //table_free(table);
+    table_free(table);
     //free(table);
 
     return 0;
