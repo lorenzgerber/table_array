@@ -40,21 +40,28 @@ int *intPtrFromInt(int i){
 
 
 
-int main(void){
-    Table *table = table_create(compareInt);
+int main(void) {
 
-    //table_insert(table, intPtrFromInt(100), intPtrFromInt(100));
-    //table_insert(table, intPtrFromInt(101), intPtrFromInt(105));
-    //table_remove(table, intPtrFromInt(100));
+    Table *table = table_create(compareString);
+    //table_setKeyMemHandler(table, free);
+    //table_setValueMemHandler(table,free);
+    //char *key1 = "key1";
+    //char *key2 = "key2";
+    //char *value1 = "value1";
+    //char *value2 = "value2";
 
-    //if(table_isEmpty(table)){
+    //table_insert(table, key1, value1);
+    //table_insert(table, key2, value2);
+    //table_remove(table, key1);
+
+    //if (table_isEmpty(table)) {
     //    printf("The table is empty\n");
     //} else {
     //    printf("The table is not empty\n");
     //}
 
-    //printf("key 101 has value %d\n", *((int*)table_lookup(table, intPtrFromInt(101))));
-    //table_free(table);
+    //printf("key 101 has value %s\n", ((char *) table_lookup(table, key2)));
+    table_free(table);
     //free(table);
 
     return 0;
