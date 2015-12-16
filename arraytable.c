@@ -1,7 +1,7 @@
 /*
- * Copyright 2012 Johan Eliasson (johane@cs.umu.se). TillÃ¥telse ges fÃ¶r anvÃ¤ndning 
- * pÃ¥ kurserna i Datastrukturer och algoritmer vid UmeÃ¥ Universitet. All annan 
- * anvÃ¤ndning krÃ¤ver fÃ¶rfattarens tillstÃ¥nd.
+ * December 16, 2015. Lorenz Gerber (dv15lgr@cs.umu.se).
+ *
+ *
  */
 
 #ifndef ARRAY_SIZE
@@ -11,11 +11,6 @@
 #include "table.h"
 #include "array.h"
 #include <string.h>
-
-
-
-
-
 
 
 
@@ -59,10 +54,13 @@ void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc){
  *  table - Pointer to the table.
  * Returns: false if the table is not empty, true if it is. */
 bool table_isEmpty(Table *table){
-    //loop through the whole array and check if all Null pointers
+
+
     MyTable *t = (MyTable*)table;
 
     // get loop boundaries for array
+    // array_high and array_low return
+    // arrays
     array *aHigh = array_high(t->values);
     array *aLow  = array_low(t->values);
 
@@ -71,12 +69,16 @@ bool table_isEmpty(Table *table){
     array_free(aHigh);
     array_free(aLow);
 
+    //traverse through the array and check if all Null pointers
     for ( int pos = low; pos < high; pos++){
         if(array_hasValue(t->values, pos)){
+            // if array_hasValue evaluates to TRUE,
+            // return FALSE (table not empty)
             return 0;
         }
     }
 
+    // return TRUE table empty
     return 1;
 }
 
@@ -101,6 +103,8 @@ void table_insert(Table *table, KEY key, VALUE value){
     TableElement *i;
 
     // get loop boundaries for array
+    // array_high and array_low return
+    // arrays
     array *aHigh = array_high(t->values);
     array *aLow  = array_low(t->values);
 
@@ -109,8 +113,9 @@ void table_insert(Table *table, KEY key, VALUE value){
     array_free(aHigh);
     array_free(aLow);
 
-    // loop through the table/array until either the same key found
-    // or an emtpy space found
+    // travers through the table/array until either the same key found
+    // or an empty space found
+    // Current, If the table is full, new element is not inserted!
     for ( int pos = low; pos < high; pos++){
 
         // get TableElement of current array pos
@@ -148,6 +153,8 @@ VALUE table_lookup(Table *table, KEY key){
     MyTable *t = (MyTable*)table;
 
     // get loop boundaries for array
+    // array_high and array_low return
+    // arrays
     array *aHigh = array_high(t->values);
     array *aLow  = array_low(t->values);
 
@@ -196,6 +203,8 @@ void table_remove(Table *table, KEY key){
     TableElement *i;
 
     // get loop boundaries for array
+    // array_high and array_low return
+    // arrays
     array *aHigh = array_high(t->values);
     array *aLow  = array_low(t->values);
 
@@ -242,6 +251,8 @@ void table_free(Table *table){
     TableElement *i;
 
     // get loop boundaries for array
+    // array_high and array_low return
+    // arrays
     array *aHigh = array_high(t->values);
     array *aLow  = array_low(t->values);
 
@@ -250,6 +261,9 @@ void table_free(Table *table){
     array_free(aHigh);
     array_free(aLow);
 
+    // traversing through the array and freeing
+    // memory for table elements if the memory handler
+    // was set
     for (int pos = low; pos < high; pos++){
         i = array_inspectValue(t->values, pos);
 
@@ -263,6 +277,7 @@ void table_free(Table *table){
         }
     }
 
+    // freeing memory for the array and the table struct
     array_free(t->values);
     free(t);
 }
