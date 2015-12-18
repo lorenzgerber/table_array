@@ -1,7 +1,11 @@
 /*
- * December 16, 2015. Lorenz Gerber (dv15lgr@cs.umu.se).
- *
- *
+ * December 18, 2015. Lorenz Gerber (dv15lgr@cs.umu.se).
+ * This file contains an implementation of the datatype
+ * table with array.
+ * The code was written as exercise OU3 within the Computer
+ * Science course DV1.
+ * The files array.c, array.h and table.h are required 
+ * to run the code.
  */
 
 #ifndef ARRAY_SIZE
