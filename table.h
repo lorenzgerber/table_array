@@ -7,7 +7,6 @@
 #ifndef TableTest_TableTest_h
 #define TableTest_TableTest_h
 #include <stdbool.h>
-#include "array.h"
 
 /* Type for keys in the table */
 typedef void *KEY;
@@ -50,7 +49,7 @@ void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc);
 bool table_isEmpty(Table *table);
 
 /* Inserts a key and value pair into the table. If memhandlers are set the table takes
- * ownership of the key and value pointers and is responsible for 
+ * ownership of the key and value pointers and is responsible for
  * deallocating them when they are removed.
  *  table - Pointer to the table.
  *  key   - Pointer to the key.

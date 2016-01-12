@@ -16,12 +16,12 @@
 #include "array.h"
 #include <string.h>
 
-typedef struct MyTable {
+typedef struct ArrayTable {
     array *values;
     CompareFunction *cf;
     KeyFreeFunc *keyFree;
     ValueFreeFunc *valueFree;
-} MyTable;
+} ArrayTable;
 
 typedef struct TableElement{
     KEY key;
@@ -37,7 +37,7 @@ typedef struct TableElement{
  *                     parameter is larger than the right item.
  * Returns: A pointer to the table. NULL if creation of the table failed. */
 Table *table_create(CompareFunction *compare_function){
-    MyTable *t = calloc(sizeof (MyTable),1);
+    ArrayTable *t = calloc(sizeof (ArrayTable),1);
     if (!t)
         return NULL;
     t->values=array_create(1, 0, ARRAY_SIZE);
@@ -51,7 +51,7 @@ Table *table_create(CompareFunction *compare_function){
  *  freeFunc- Pointer to a function that is called for  freeing all
  *                     the memory used by keys inserted into the table*/
 void table_setKeyMemHandler(Table *table, KeyFreeFunc *freeFunc){
-    MyTable *t = (MyTable*)table;
+    ArrayTable *t = (ArrayTable*)table;
     t->keyFree=freeFunc;
 }
 
@@ -61,7 +61,7 @@ void table_setKeyMemHandler(Table *table, KeyFreeFunc *freeFunc){
  *  freeFunc- Pointer to a function that is called for  freeing all
  *                     the memory used by values inserted into the table*/
 void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc){
-    MyTable *t = (MyTable*)table;
+    ArrayTable *t = (ArrayTable*)table;
     t->valueFree=freeFunc;
 }
 
@@ -71,7 +71,7 @@ void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc){
 bool table_isEmpty(Table *table){
 
 
-    MyTable *t = (MyTable*)table;
+    ArrayTable *t = (ArrayTable*)table;
 
     // get loop boundaries for array
     // array_high and array_low return
@@ -107,7 +107,7 @@ bool table_isEmpty(Table *table){
  *  value - Pointer to the value.
  */
 void table_insert(Table *table, KEY key, VALUE value){
-    MyTable *t = (MyTable*)table;
+    ArrayTable *t = (ArrayTable*)table;
 
     // make a new table element
     TableElement *e=malloc(sizeof(TableElement));
@@ -165,7 +165,7 @@ void table_insert(Table *table, KEY key, VALUE value){
  *          until the item is removed from the table, or the table is
  *          destroyed. */
 VALUE table_lookup(Table *table, KEY key){
-    MyTable *t = (MyTable*)table;
+    ArrayTable *t = (ArrayTable*)table;
 
     // get loop boundaries for array
     // array_high and array_low return
@@ -212,7 +212,7 @@ VALUE table_lookup(Table *table, KEY key){
  *  key   - Pointer to the item's key.
  */
 void table_remove(Table *table, KEY key){
-    MyTable *t = (MyTable*)table;
+    ArrayTable *t = (ArrayTable*)table;
 
     // table element to work on
     TableElement *i;
@@ -262,7 +262,7 @@ void table_remove(Table *table, KEY key){
  *  table - Pointer to the table. After the function completes this pointer
  *          will be invalid for further use. */
 void table_free(Table *table){
-    MyTable *t = (MyTable*)table;
+    ArrayTable *t = (ArrayTable*)table;
     TableElement *i;
 
     // get loop boundaries for array
