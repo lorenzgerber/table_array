@@ -16,6 +16,17 @@
 #include "array.h"
 #include <string.h>
 
+typedef struct MyTable {
+    array *values;
+    CompareFunction *cf;
+    KeyFreeFunc *keyFree;
+    ValueFreeFunc *valueFree;
+} MyTable;
+
+typedef struct TableElement{
+    KEY key;
+    VALUE value;
+} TableElement;
 
 
 /* Creates a table.

@@ -23,17 +23,6 @@ typedef void ValueFreeFunc(VALUE);
 
 typedef void /* void hÃ¤r kan ni om ni vill byta ut mot en egen struct i era tabellimplementationer */ Table;
 
-typedef struct MyTable {
-    array *values;
-    CompareFunction *cf;
-    KeyFreeFunc *keyFree;
-    ValueFreeFunc *valueFree;
-} MyTable;
-
-typedef struct TableElement{
-    KEY key;
-    VALUE value;
-} TableElement;
 /* Creates a table.
  *  compare_function - Pointer to a function that is called for comparing
  *                     two keys. The function should return <0 if the left
