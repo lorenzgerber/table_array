@@ -21,6 +21,7 @@ typedef struct ArrayTable {
     CompareFunction *cf;
     KeyFreeFunc *keyFree;
     ValueFreeFunc *valueFree;
+    int elementCounter;
 } ArrayTable;
 
 typedef struct TableElement{
@@ -43,6 +44,7 @@ Table *table_create(CompareFunction *compare_function){
     t->values=array_create(1, 0, ARRAY_SIZE);
     array_setMemHandler(t->values, free);
     t->cf = compare_function;
+    t->elementCounter = 0;
     return t;
 }
 
@@ -67,33 +69,20 @@ void table_setValueMemHandler(Table *table,ValueFreeFunc *freeFunc){
 
 /* Determines if the table is empty.
  *  table - Pointer to the table.
- * Returns: false if the table is not empty, true if it is. */
+ * Returns: false if the table is not empty, true if it is.
+ */
 bool table_isEmpty(Table *table){
 
 
     ArrayTable *t = (ArrayTable*)table;
 
-    // get loop boundaries for array
-    // array_high and array_low return
-    // arrays
-    array *aHigh = array_high(t->values);
-    array *aLow  = array_low(t->values);
-
-    int high = *((int*)array_inspectValue(aHigh,0));
-    int low = *((int*)array_inspectValue(aLow,0));
-    array_free(aHigh);
-    array_free(aLow);
-
-    //traverse through the array and check if all Null pointers
-    for ( int pos = low; pos < high; pos++){
-        if(array_hasValue(t->values, pos)){
-            // if array_hasValue evaluates to TRUE,
-            // return FALSE (table not empty)
-            return 0;
-        }
+    // check if element counter is not zero
+    // hence if true, the table is not empty
+    if (t->elementCounter != 0){
+        return 0;
     }
 
-    // return TRUE table empty
+    // table is empty
     return 1;
 }
 
@@ -139,6 +128,7 @@ void table_insert(Table *table, KEY key, VALUE value){
         // if current array pos is empty, put in new element and break
         if(i == NULL){
             array_setValue(t->values,e,pos);
+            t->elementCounter++;
             break;
         }
 
@@ -246,6 +236,7 @@ void table_remove(Table *table, KEY key){
         if (t->cf(i->key,key)==0){
 
             array_setValue(t->values, NULL, pos);
+            t->elementCounter--;
         }
 
     }
